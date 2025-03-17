@@ -10,152 +10,16 @@
 <body>
   <div class="container">
     <ul class="comments">
-      <li class="comment">
-        <div class="comment-header">
-          <div>Глеб Фокин</div>
-          <div>12.02.22 12:18</div>
-        </div>
-        <div class="comment-body">
-          <div class="comment-text">
-            Это будет первый комментарий на этой странице
-          </div>
-        </div>
-        <div class="comment-footer">
-          <div class="likes">
-            <span class="likes-counter">3</span>
-            <button class="like-button"></button>
-          </div>
-        </div>
-      </li>
-      <li class="comment">
-        <div class="comment-header">
-          <div>Варвара Н.</div>
-          <div>13.02.22 19:22</div>
-        </div>
-        <div class="comment-body">
-          <div class="comment-text">
-            Мне нравится как оформлена эта страница! ❤
-          </div>
-        </div>
-        <div class="comment-footer">
-          <div class="likes">
-            <span class="likes-counter">75</span>
-            <button class="like-button -active-like"></button>
-          </div>
-        </div>
-      </li>
     </ul>
     <div class="add-form">
-      <input type="text" class="add-form-name" placeholder="Введите ваше имя" autocomplete="given-name name cc-name"
+      <input type="text" id="name-input" class="add-form-name" placeholder="Введите ваше имя" autocomplete="given-name name cc-name"
         name="name" required />
-      <textarea type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4" required></textarea>
+      <textarea type="textarea" id="text-input" class="add-form-text" placeholder="Введите ваш коментарий" rows="4" required></textarea>
       <div class="add-form-row">
         <button class="add-form-button">Написать</button>
       </div>
     </div>
   </div>
+  <script type="module" src="index.js"></script>
 </body>
-
-<script>
-  const nameInput = document.querySelector(".add-form-name");
-  const textInput = document.querySelector(".add-form-text");
-  const addForm = document.querySelector(".add-form-button");
-  const commentsList = document.querySelector(".comments");
-  const likesCounter = document.querySelector(".likes-counter");
-  let likes = 0;
-  const now = new Date();
-  const options = { day: 'numeric', month: 'numeric', year: '2-digit', hour: '2-digit', minute: '2-digit' };
-  const formattedTime = now.toLocaleTimeString('ru-RU', options).replace(',', '');
-  const addComment = () => {
-    if (nameInput.value != "" && textInput.value != "") {
-      const comment = {
-        name: nameInput.value,
-        text: textInput.value,
-        date: formattedTime,
-        likes: 0
-      };
-      const commentElement = document.createElement("li");
-      commentElement.classList.add("comment");
-
-      const commentHeader = document.createElement("div");
-      commentHeader.classList.add("comment-header");
-      commentElement.appendChild(commentHeader);
-
-      const commentName = document.createElement("div");
-      commentHeader.appendChild(commentName);
-      commentName.textContent = comment.name;
-
-      const commentDate = document.createElement("div");
-      commentHeader.appendChild(commentDate);
-      commentDate.textContent = comment.date;
-
-      const commentBody = document.createElement("div");
-      commentBody.classList.add("comment-body");
-      commentElement.appendChild(commentBody);
-
-      const commentText = document.createElement("div");
-      commentText.classList.add("comment-text")
-      commentBody.appendChild(commentText);
-      commentText.textContent = comment.text;
-
-      const commentFooter = document.createElement("div");
-      commentFooter.classList.add("comment-footer");
-      commentElement.appendChild(commentFooter);
-
-      const commentLikes = document.createElement("div");
-      commentLikes.classList.add("likes");
-      commentFooter.appendChild(commentLikes);
-
-      const likesCounter = document.createElement("span");
-      likesCounter.classList.add("likes-counter");
-      commentFooter.appendChild(likesCounter);
-      likesCounter.textContent = comment.likes;
-
-      const likeButton = document.createElement("button");
-      likeButton.classList.add("like-button");
-      commentFooter.appendChild(likeButton);
-
-      commentsList.appendChild(commentElement);
-
-      nameInput.value = '';
-      textInput.value = '';
-    } else {
-      if (nameInput.value === "" ) {
-        const form = document.querySelector('.add-form');
-        const formName = document.querySelector('.add-form-name');
-        const errorMessage = document.createElement("span");
-        errorMessage.classList.add('error');
-        errorMessage.textContent = 'Имя не может быть пустым';
-        form.insertBefore(errorMessage, formName);
-        setTimeout(() => errorMessage.remove(), 3000);
-      }
-      if (textInput.value === "") {
-        const form = document.querySelector('.add-form');
-        const formText = document.querySelector('.add-form-text');
-        const errorMessage = document.createElement("span");
-        errorMessage.classList.add('error');
-        errorMessage.textContent = 'Комментарий не может быть пустым';
-        form.insertBefore(errorMessage, formText);
-        setTimeout(() => errorMessage.remove(), 3000);
-      }
-    }
-  };
-  addForm.addEventListener("click", addComment);
-
-  document.addEventListener('click', function (event) {
-    if (event.target && event.target.classList.contains('like-button')) {
-      // Находим ближайший элемент с классом "like-count" внутри того же комментария
-      const likeCount = event.target.closest('.comment').querySelector('.likes-counter');
-      const currentLikes = parseInt(likeCount.textContent);
-      if (event.target.classList.contains('-active-like')){
-        event.target.classList.remove('-active-like');
-        likeCount.textContent = currentLikes - 1;
-      } else {
-        event.target.classList.add('-active-like');
-        likeCount.textContent = currentLikes + 1;
-      }
-    }
-  });
-</script>
-
 </html>
