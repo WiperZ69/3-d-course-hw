@@ -52,7 +52,7 @@ export const renderComments = () => {
     for (const commentElement of commentsElements) {
       commentElement.addEventListener('click', () => {
         const currentComment = comments[commentElement.dataset.index];
-        text.value = `${currentComment.name} : ${currentComment.text}`;
+        text.value = `> ${currentComment.name} : ${currentComment.text}`;
       })
     }
   };
