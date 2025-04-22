@@ -1,14 +1,23 @@
 import { renderComments } from './modules/renderComments.js'
 import { updateComments } from './modules/comments.js'
 import { fetchComments } from './modules/api.js'
-import { initAddCommentListener } from './modules/initListeners.js'
+import { renderLogin } from './modules/renderLogin.js'
 
-document.querySelector('.comments').innerHTML =
-    'Пожалуйста, подождите, загружаю комментарии...'
+export const userData = JSON.parse(localStorage.getItem('user'))
 
-fetchComments().then((data) => {
-    updateComments(data)
-    renderComments()
-})
+export const fetchAndRenderComments = (isFirstLoading) => {
+    if (userData) {
+        if (isFirstLoading) {
+            document.querySelector('.container').innerHTML =
+                `<p>Пожалуйста, подождите, загружаю комментарии...</p>`
+        }
+    } else {
+        renderLogin()
+    }
+    fetchComments().then((data) => {
+        updateComments(data)
+        renderComments()
+    })
+}
 
-initAddCommentListener(renderComments)
+fetchAndRenderComments(true)
