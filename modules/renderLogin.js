@@ -29,21 +29,29 @@ export const renderLogin = () => {
     const btn = document.querySelector('.button-main')
 
     btn.addEventListener('click', () => {
-        login(log.value, pass.value)
-            .then((response) => {
-                return response.json()
-            })
-            .then((data) => {
-                setToken(data.user.token)
-                setName(data.user.name)
-                localStorage.setItem(
-                    'user',
-                    JSON.stringify({
-                        name: data.user.name,
-                        token: data.user.token,
-                    }),
-                )
-                fetchAndRenderComments()
-            })
+        if (log.value === '') {
+            const errorMessage = document.querySelector('.login-error')
+            errorMessage.style.display = 'block'
+            setTimeout(() => (errorMessage.style.display = 'none'), 3000)
+            return
+        }
+        if (pass.value === '') {
+            const errorMessage = document.querySelector('.login-error')
+            errorMessage.style.display = 'block'
+            setTimeout(() => (errorMessage.style.display = 'none'), 3000)
+            return
+        }
+        login(log.value, pass.value).then((data) => {
+            setToken(data.user.token)
+            setName(data.user.name)
+            localStorage.setItem(
+                'user',
+                JSON.stringify({
+                    name: data.user.name,
+                    token: data.user.token,
+                }),
+            )
+            fetchAndRenderComments()
+        })
     })
 }

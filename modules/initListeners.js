@@ -20,7 +20,6 @@ export const initAddCommentListener = (renderComments) => {
     const addButton = document.querySelector('.add-form-button')
 
     addButton.addEventListener('click', () => {
-        // Проверка пустых полей (ваш существующий код)
         if (name.value === '') {
             const form = document.querySelector('.add-form')
             const formName = document.querySelector('.add-form-name')
