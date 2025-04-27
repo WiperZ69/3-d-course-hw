@@ -1,8 +1,13 @@
 import { comments } from './comments.js'
+import { initLikeListeners } from './initLikeListeners.js'
+import { initReplyListeners, initAddCommentListener } from './initListeners.js'
+import { renderLogin } from './renderLogin.js'
+import { name } from './api.js'
 
 export const renderComments = () => {
-    const list = document.querySelector('.comments')
-    list.innerHTML = comments
+    const userData = JSON.parse(localStorage.getItem('user'))
+    const container = document.querySelector('.container')
+    const commentsHtml = comments
         .map((comment, index) => {
             return ` 
       <li class="comment" data-index="${index}">
@@ -24,32 +29,57 @@ export const renderComments = () => {
         </li>`
         })
         .join('')
-    const likeButtons = document.querySelectorAll('.like-button')
 
-    function delay(interval = 300) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve()
-            }, interval)
+    const addCommentsHtml = `
+            <div class="add-form">
+                <div class="add-form-top">
+                <input
+                    type="text"
+                    id="name-input"
+                    class="add-form-name"
+                    placeholder="Введите ваше имя"
+                    readonly
+                    value="${userData ? userData.name : name}"
+                    autocomplete="given-name name cc-name"
+                    name="name"
+                    required
+                /> <span class="add-form-button-quit">Выйти</span>
+                </div>
+                <textarea
+                    type="textarea"
+                    id="text-input"
+                    class="add-form-text"
+                    placeholder="Введите ваш коментарий"
+                    rows="4"
+                    required
+                ></textarea>
+                <div class="add-form-row">
+                    <button class="add-form-button">Написать</button>
+                </div>
+            </div>
+            <div class="form-loading" style="display: none; margin-top: 20px">
+                Коментарий добавляется...
+            </div>`
+
+    const linkToLoginText = `<p>Чтобы отправить комментарий, <span class="link-login">войдите</span></p>`
+
+    const baseHtml = `<ul class="comments">${commentsHtml}</ul>
+    ${userData ? addCommentsHtml : linkToLoginText}
+    `
+    container.innerHTML = baseHtml
+    if (userData) {
+        initLikeListeners(renderComments)
+        initReplyListeners()
+        initAddCommentListener(renderComments)
+        const quitComments = document.querySelector('.add-form-button-quit')
+
+        quitComments.addEventListener('click', () => {
+            localStorage.clear()
+            renderLogin()
         })
-    }
-    for (const likeButton of likeButtons) {
-        likeButton.addEventListener('click', (event) => {
-            event.stopPropagation()
-            likeButton.classList.add('-loading-like')
-
-            const index = likeButton.dataset.index
-            const comment = comments[index]
-
-            delay(2000).then(() => {
-                comment.likes = comment.isLiked
-                    ? comment.likes - 1
-                    : comment.likes + 1
-                comment.isLiked = !comment.isLiked
-                comment.isLikeLoading = false
-                renderComments()
-                likeButton.classList.remove('-loading-like')
-            })
+    } else {
+        document.querySelector('.link-login').addEventListener('click', () => {
+            renderLogin()
         })
     }
 }

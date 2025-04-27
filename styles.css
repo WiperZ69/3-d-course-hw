@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
 }
@@ -166,4 +170,64 @@ body {
 
 .-loading-like {
     animation: pulse 2s linear infinite;
+}
+
+.link-login {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.add-form-registry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    border: none;
+}
+
+.add-form-button-main {
+    background-color: #bcec30;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    margin-top: 24px;
+    font-size: 24px;
+    padding: 10px 20px;
+    width: 100%;
+}
+.add-form-button-main:hover {
+    background-color: #bfff00;
+    color: #ffffff;
+}
+
+.add-form-button-link {
+    cursor: pointer;
+}
+
+.wh-100 {
+    width: 100%;
+}
+
+.mb-1 {
+    margin-bottom: 10px;
+}
+
+.login-error {
+    color: red;
+    padding: 5px;
+}
+
+.add-form-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-form-button-quit {
+    background-color: #ec3030;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 10px 20px;
 }
