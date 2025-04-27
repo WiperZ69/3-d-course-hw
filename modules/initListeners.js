@@ -1,4 +1,4 @@
-import { postComment } from './api.js'
+import { postComment, fetchComments } from './api.js'
 import { comments, updateComments } from './comments.js'
 import { sanitizeHtml } from './replace.js'
 
@@ -48,18 +48,26 @@ export const initAddCommentListener = (renderComments) => {
         // Функция для отправки комментария с повторами
         const tryPostComment = (attempt = 1, maxAttempts = 3, delay = 2000) => {
             postComment(sanitizeHtml(text.value), sanitizeHtml(name.value))
-                .then((data) => {
-                    // Успешная отправка
+                .then(() => {
+                    // После успешной отправки комментария —  загружаем комментарии
+                    return fetchComments()
+                })
+                .then((comments) => {
+                    // Обновляем интерфейс с новыми комментариями
                     document.querySelector('.form-loading').style.display =
                         'none'
                     document.querySelector('.add-form').style.display = 'flex'
-                    updateComments(data)
+                    updateComments(comments)
                     renderComments()
                     name.value = ''
                     text.value = ''
                 })
                 .catch((error) => {
                     // Обработка ошибок
+                    document.querySelector('.form-loading').style.display =
+                        'none'
+                    document.querySelector('.add-form').style.display = 'flex'
+
                     if (
                         error.message === 'Ошибка сервера' &&
                         attempt < maxAttempts
@@ -69,11 +77,6 @@ export const initAddCommentListener = (renderComments) => {
                         }, delay)
                         return
                     }
-
-                    // Другие ошибки или превышено кол-во попыток
-                    document.querySelector('.form-loading').style.display =
-                        'none'
-                    document.querySelector('.add-form').style.display = 'flex'
 
                     if (error.message === 'Failed to fetch') {
                         alert('Нет интернета, попробуйте снова')
@@ -92,7 +95,6 @@ export const initAddCommentListener = (renderComments) => {
                     }
                 })
         }
-
         tryPostComment()
     })
 }
